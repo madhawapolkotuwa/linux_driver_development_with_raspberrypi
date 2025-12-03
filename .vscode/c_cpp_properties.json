@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "Linux (Raspberry Pi)",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/usr/include",
+                "/usr/local/include",
+                "/usr/src/linux-headers-6.12.47+rpt-rpi-v8/include", // Replace $(uname -r) with your version
+                "/usr/src/linux-headers-6.12.47+rpt-common-rpi/include/",
+                "/usr/src/linux-headers-6.12.47+rpt-common-rpi/arch/arm/include/",
+                "/usr/src/linux-headers-6.12.47+rpt-common-rpi/arch/arm64/include/"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc", // Ensure this path is correct for your Pi
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-arm" // Use the appropriate mode for ARM
+        }
+    ],
+    "version": 4
+}
