@@ -27,7 +27,7 @@
 * A simple hello.ko
 * Makefile
 * insmod, rmmod, modinfo
-* Kernel print levels
+* Kernel print levels (Log levels)
 
 ## SECTION 2 — Character Device Driver Foundations
 
