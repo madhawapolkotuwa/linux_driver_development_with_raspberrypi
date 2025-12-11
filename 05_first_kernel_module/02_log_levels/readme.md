@@ -1,5 +1,8 @@
 ## Kernel Log levels
 
+## Video :
+[![Youtube Video](https://img.youtube.com/vi/1evG7BnXnqk/0.jpg)](https://www.youtube.com/watch?v=1evG7BnXnqk) 
+
 * Link to Linux Device Driver 3rd Edition book: [ldd3](https://lwn.net/Kernel/LDD3/)
 
 * Link to the Log levels reference: [log levels](https://docs.kernel.org/core-api/printk-basics.html)

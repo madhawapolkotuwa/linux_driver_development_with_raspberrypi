@@ -1,5 +1,8 @@
 ## Linux Kernel Programming on a Raspberry Pi
 
+Video : 
+[![Youtube Video](https://img.youtube.com/vi/K70lX9b4R1I/0.jpg)](https://www.youtube.com/watch?v=K70lX9b4R1I) 
+
 * Udate Packages with: 
 ```
 sudo apt update && sudo apt upgrade -y

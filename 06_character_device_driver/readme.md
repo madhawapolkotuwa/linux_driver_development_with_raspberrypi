@@ -1,6 +1,9 @@
 # Understanding Linux Device Files
 
-## Block and Charecter Devices
+## Video :
+[![Youtube Video](https://img.youtube.com/vi/MZDzAPh2DhA/0.jpg)](https://www.youtube.com/watch?v=MZDzAPh2DhA) 
+
+## Block and Character Devices
 
 ## Major & Minor 
 
