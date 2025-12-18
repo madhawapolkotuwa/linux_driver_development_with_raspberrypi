@@ -17,30 +17,30 @@
 
 ## SECTION 1 — Raspberry Pi Setup & Development Environment
 
-### 4. Raspberry Pi Setup
+### [4. Raspberry Pi Setup](/04_raspberry_pi_setup/)
 * Installing Raspberry Pi OS (64-bit)
 * Enabling SSH
 * Installing kernel headers
 * Recommended directory layout
 
-### 5. First Kernel Module
+### [5. First Kernel Module](/05_first_kernel_module/01_hello/)
 * A simple hello.ko
 * Makefile
 * insmod, rmmod, modinfo
-* Kernel print levels (Log levels)
+* [Kernel print levels (Log levels)](/05_first_kernel_module/02_log_levels/)
 
 ## SECTION 2 — Character Device Driver Foundations
 
-### 6. Character Device Driver Basics
+### [6. Character Device Driver Basics](/06_character_device_driver/)
 * Allocating major/minor numbers
 * cdev_init, cdev_add
 * Manual mknod vs udev auto-creation
 * File operations overview
 
-### 7. File Operations Deep Dive
-* open, release, read, write
+### [7. File Operations Deep Dive](/07_file_cdev_fops/)
+* [open, release, read, write](/07_file_cdev_fops/01_file_ops/)
 * copy_to_user, copy_from_user
-* Using file->private_data
+* [Using file->private_data](/07_file_cdev_fops/02_private_data/)
 
 ### 8. IOCTL Implementation
 * Defining IOCTL commands

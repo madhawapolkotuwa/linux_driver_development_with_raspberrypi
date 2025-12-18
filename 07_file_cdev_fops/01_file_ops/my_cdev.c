@@ -15,8 +15,10 @@ static struct cdev my_cdev;
 
 static struct class *my_class;
 
+/* Size of the device's internal buffer */
 #define DEV_BUFFER_SIZE 64
 
+/* Internal device buffer (kernel memory) and it's mutex */
 static char *dev_buffer;
 static struct mutex dev_mutex;
 
@@ -33,6 +35,7 @@ static int my_release(struct inode *pInode, struct file *pFile){
     return 0;
 }
 
+/* read: copy data from kernel buffer -> user-space buffer*/
 static	ssize_t my_read(struct file *pFile, char __user *pUser_buff, size_t count, loff_t *pOffset){
     size_t bytes_to_copy, not_copied, copied;
 
@@ -59,6 +62,8 @@ static	ssize_t my_read(struct file *pFile, char __user *pUser_buff, size_t count
     return (ssize_t)copied;
 
 }
+
+/* write: copy data from user-space buffer -> kernel buffer */
 static	ssize_t my_write(struct file *pFile, const char __user *pUser_buff, size_t count, loff_t *pOffset){
     size_t bytes_to_copy, not_copied, copied;
 
@@ -94,6 +99,7 @@ static	ssize_t my_write(struct file *pFile, const char __user *pUser_buff, size_
     return (size_t)copied;
 }
 
+/* file operations structure */
 static struct file_operations fops = {
     .open = my_open,
     .release = my_release,
