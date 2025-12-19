@@ -38,9 +38,9 @@
 * File operations overview
 
 ### [7. File Operations Deep Dive](/07_file_cdev_fops/)
-* [open, release, read, write](/07_file_cdev_fops/01_file_ops/)
+* open, release, read, write
 * copy_to_user, copy_from_user
-* [Using file->private_data](/07_file_cdev_fops/02_private_data/)
+* Using file->private_data
 
 ### 8. IOCTL Implementation
 * Defining IOCTL commands
