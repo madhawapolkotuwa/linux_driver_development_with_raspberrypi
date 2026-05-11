@@ -114,10 +114,10 @@
 
 ## SECTION 6 - Linux Device Model & Sysfs
 
-### 21. Linux Device Model
-* Devices, drivers, buses
+### [21. Linux Device Model](/21_linux_device_module/)
+* Devices, drivers, buses, classes
 * Probe/remove lifecycle
-* Uevents (plug/unplug)
+* Hotplug & Uevents (plug/unplug)
 
 ### 22. Sysfs Interface
 * Device attributes
