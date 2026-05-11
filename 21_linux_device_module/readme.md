@@ -649,3 +649,7 @@ Concept | Role
 uevent | Fired on every kobject add/remove/change ➡ consumed by udevd
 
 
+* Check :- [Example](./example/)
+* Check :- [Platform Driver vs Character Device Driver Registration](./platform_vs_charecter_device_driver/readme.md)
+
+
