@@ -146,13 +146,13 @@ Use `BUS_ATTR` to define them:
 ```c
 #define MY_BUS_DESCR "LDD Tutorial Bus"
 
-static ssize_t my_show_descr(struct bus_type *bus, char *buf)
+static ssize_t descr_show(const struct bus_type *bus, char *buf)
 {
     return snprintf(buf, PAGE_SIZE, "%s\n", MY_BUS_DESCR);
 }
 
 /* Defines bus_attr_descr - visible as /sys/bus/mybus/descr */
-BUS_ATTR(descr, 0444, my_show_descr, NULL);
+static BUS_ATTR_RO(descr);
 
 /* In module_init: */
 bus_create_file(&my_bus_type, &bus_attr_descr); /* /sys/bus/mybus/descr */

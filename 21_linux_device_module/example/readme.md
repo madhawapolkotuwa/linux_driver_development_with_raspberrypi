@@ -15,17 +15,6 @@ sudo insmod mydevice.ko
 sudo insmod mydriver.ko
 ```
 
-Expected Output `dmesg`:
-```
-mybus: init
-mybus: registered
-
-mydevice: init
-mydevice: device registered
-
-mydriver: init
-mydriver: probe called for mydev0
-```
 ------------------
 3. remove order
 ```bash
@@ -34,16 +23,288 @@ sudo rmmod mydevice
 sudo rmmod mybus
 ```
 
-Expected Output:
 ```
-mydriver: remove called for mydev0
-mydriver: exit
-
-mydevice: exit
-
-mybus: exit
+                +------------------+
+                |    mybus.ko      |
+                |   (bus_type)     |
+                +------------------+
+                         |
+          --------------------------------
+          |                              |
+          v                              v
++------------------+          +------------------+
+|   mydevice.ko    |          |   mydriver.ko    |
+| registers device |          | registers driver |
+|    mydev0        |          |  name = mydev0   |
++------------------+          +------------------+
+          |                              |
+          ------------ match() ----------
+                         |
+                         v
+                       probe()
 ```
 
+-----------------------------------------
+
+## Check steps:
+### Step 1: Load the Bus  
+```bash
+sudo insmod mybus.ko
+```
+Kernel log:
+```
+mybus: init
+mybus: registered
+```
+This means:
+
+1. `bus_register()` created `/sys/bus/mybus`
+2. `device_register()` created `/sys/devices/mybus0`
+
+#### Check Bus Registration
+```bash
+ls /sys/bus/mybus/
+```
+Output:
+```
+devices  drivers  drivers_autoprobe  drivers_probe  uevent  version
+```
+| Entry             | Description                    |
+| ----------------- | ------------------------------ |
+| devices           | devices attached to this bus   |
+| drivers           | drivers registered to this bus |
+| drivers_autoprobe | automatic probing control      |
+| drivers_probe     | manual probe trigger           |
+| uevent            | udev event interface           |
+| version           | custom sysfs attribute         |
+
+
+#### Check Bus Attribute
+
+```bash
+cat /sys/bus/mybus/version 
+```
+output:
+```
+1.0
+```
+This is a custom bus attribute exported through sysfs.
+
+#### Check Devices
+```
+ls /sys/bus/mybus/devices/
+```
+No output yet.   
+Reason :  **no devices registered yet**  
+
+
+#### Check Drivers
+
+```
+ls /sys/bus/mybus/drivers/
+```
+No output yet.   
+Reason: **no drivers registered yet**
+
+#### Bus Device
+```
+ls /sys/devices/mybus0/
+```
+Output:
+```
+power uevent
+```
+Explanation: mybus0 is the parent device created by:
+```
+static struct device my_bus_device
+```
+>> All devices on this custom bus become children of this parent device.
+
+#### udev Events After Bus Registration
+```
+KERNEL add /bus/mybus
+KERNEL add /module/mybus
+
+UDEV add /bus/mybus
+UDEV add /module/mybus
+```
+| Event             | Meaning              |
+| ----------------- | -------------------- |
+| add /bus/mybus    | new bus registered   |
+| add /module/mybus | kernel module loaded |
+
+
+### Step 2: Load the Device
+
+```bash
+sudo insmod mydevice.ko
+```
+Kernel log:
+```
+mydevice: init
+mydevice: device registered
+```
+This registers:  
+```
+mydev0
+```
+onto:
+```
+mybus0
+```
+
+#### Check Device Registration
+```bash
+ls /sys/bus/mybus/devices/
+```
+Output:
+```
+mydev0
+```
+The device is now registered to the bus.
+
+#### Check Device Attribute
+```bash
+cat /sys/bus/mybus/devices/mydev0/type
+```
+Output:
+```
+type : mydev0
+```
+This attribute comes from:
+```c
+DEVICE_ATTR(type, 0444, my_show_type, NULL);
+```
+
+#### Check Device Location
+```bash
+ls /sys/devices/mybus0/
+```
+Output:
+```
+mydev0 power uevent
+```
+mydev0 becomes a child device under:
+```
+/sys/devices/mybus0/
+```
+because:
+```c
+mydev->dev.parent = &my_bus_device;
+```
+#### Check Drivers
+```
+ls /sys/bus/mybus/drivers/
+```
+Still empty.     
+Reason:
+* no driver loaded yet
+* device exists without a driver     
+
+This is a very important Linux concept:
+
+>>devices can exist before drivers
+
+The kernel keeps the device registered and waits for a matching driver.
+
+#### udev Events After Device Registration
+```
+KERNEL add /devices/mybus0/mydev0
+UDEV add /devices/mybus0/mydev0
+```
+| Event                      | Meaning                 |
+| -------------------------- | ----------------------- |
+| add /devices/mybus0/mydev0 | device created in sysfs |
+
+### Step 3 : Load the Driver
+```bash
+sudo insmod mydriver.ko
+```
+Kernel log:
+```
+mydriver: init
+mybus: match called
+mydriver: probe called for mydev0
+```
+
+#### What Happened Internally
+
+When the driver registers:
+```c
+driver_register()
+```
+the kernel automatically:
+
+1. scans devices on the bus
+2. calls the bus match() function
+3. finds matching device
+4. binds driver to device
+5. calls probe()
+
+#### Binding Sequence
+```
+  driver_register()
+        ↓
+    bus match()
+        ↓
+    match success
+        ↓
+      probe()
+```
+
+#### Verify Driver Registration
+```bash
+ls /sys/bus/mybus/drivers/
+```
+Output:
+```
+mydev0
+```
+The driver is now attached to the device.
+
+-------------------------
+
+**Notice this log order:**   
+```
+mybus: match called
+mydriver: probe called for mydev0
+```
+This proves:
+```
+probe() is NOT called directly by the driver
+```
+Instead:
+```
+the Linux driver core calls probe()
+only after a successful match.
+```
+This is one of the most important Linux Device Model concepts.
+
+-----
+
+#### udev Events During Binding
+```
+KERNEL bind /devices/mybus0/mydev0
+UDEV bind /devices/mybus0/mydev0
+```
+The driver and device are now connected.
+
+----------------------------------------
+
+### Module Removal Order
+````bash
+sudo rmmod mydriver
+sudo rmmod mydevice
+sudo rmmod mybus
+````
+Correct removal order:
+```
+driver → device → bus
+```
+Reason:
+
+* driver depends on device/bus
+* device depends on bus
 
 -----------------------------------------
 <br>

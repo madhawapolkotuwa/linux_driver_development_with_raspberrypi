@@ -7,8 +7,17 @@
 static int my_match(struct device *dev,
                     const struct device_driver *drv)
 {
+    pr_info("mybus: match called\n");
     return !strcmp(dev_name(dev), drv->name);
 }
+
+/* uevent: add a custom environment variable for udev */
+static int my_uevent(const struct device *dev, struct kobj_uevent_env *env)
+{
+    add_uevent_var(env, "DEV_NAME=%s", dev_name(dev));
+    return 0;
+}
+
 
 /*******************************************
  * Custom bus definition
@@ -16,6 +25,7 @@ static int my_match(struct device *dev,
 struct bus_type my_bus_type = {
     .name  = "mybus",
     .match = my_match,
+    .uevent = my_uevent,
 };
 EXPORT_SYMBOL(my_bus_type);
 
