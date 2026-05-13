@@ -107,6 +107,10 @@ static int __init mybus_init(void)
     if (ret)
         return ret;
 
+    ret = bus_create_file(&my_bus_type, &bus_attr_version);
+    if (ret)
+        pr_err("Failed to create bus attribute\n");
+
     ret = device_register(&my_bus_device);
     if (ret) {
         bus_unregister(&my_bus_type);
@@ -120,7 +124,8 @@ static int __init mybus_init(void)
 static void __exit mybus_exit(void)
 {
     pr_info("mybus: exit\n");
-
+    bus_remove_file(&my_bus_type, &bus_attr_version);
+    
     device_unregister(&my_bus_device);
     bus_unregister(&my_bus_type);
 }
