@@ -18,7 +18,6 @@ static int my_uevent(const struct device *dev, struct kobj_uevent_env *env)
     return 0;
 }
 
-
 /*******************************************
  * Custom bus definition
  *******************************************/
@@ -28,6 +27,16 @@ struct bus_type my_bus_type = {
     .uevent = my_uevent,
 };
 EXPORT_SYMBOL(my_bus_type);
+
+/* bus attributes */
+//  Show function
+static ssize_t version_show(const struct bus_type *bus, char *buf){
+    return sprintf(buf, "1.0\n");
+}
+
+//  Define attribute (bus_attr_version)
+static BUS_ATTR_RO(version);
+
 
 /*******************************************
  * Parent bus device
