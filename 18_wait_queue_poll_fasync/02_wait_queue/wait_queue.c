@@ -10,7 +10,7 @@
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("MPCoding - LDD");
-MODULE_DESCRIPTION("Blocking vs Non-Blocking I/O with Wait queue — character device with GPIO interrupt");
+MODULE_DESCRIPTION("Blocking vs Non-Blocking I/O with Wait queue - character device with GPIO interrupt");
 
 /* GPIO Button */
 #define BUTTON_GPIO 20
@@ -54,7 +54,7 @@ static ssize_t my_read(struct file *file, char __user *buff, size_t len, loff_t 
         /* Sleep until condition becomes true. Can be interrupted by signals. */
         int ret = wait_event_interruptible(my_queue, data_available != 0);
         if (ret)
-            return -ERESTARTSYS;  /* Interrupted by a signal — propagate to user space */
+            return -ERESTARTSYS;  /* Interrupted by a signal - propagate to user space */
 
     }
 
