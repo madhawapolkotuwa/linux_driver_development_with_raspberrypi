@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    /* Open the same device twice — two independent file descriptors */
+    /* Open the same device twice - two independent file descriptors */
     int fd1 = open(argv[1], O_RDONLY);
     int fd2 = open(argv[1], O_RDONLY);
 

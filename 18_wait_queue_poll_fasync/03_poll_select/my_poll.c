@@ -11,7 +11,7 @@
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("MPCoding - LDD");
-MODULE_DESCRIPTION("Poll demo — character device with GPIO interrupt");
+MODULE_DESCRIPTION("Poll demo - character device with GPIO interrupt");
 
 #define BUTTON_GPIO 20
 #define IO_OFFSET 512
@@ -70,7 +70,7 @@ static ssize_t my_read(struct file *file,
 
         int ret = wait_event_interruptible(my_wait_queue, data->last_event != event_count);
         if (ret)
-            return -ERESTARTSYS;  /* Interrupted by a signal — propagate to user space */
+            return -ERESTARTSYS;  /* Interrupted by a signal - propagate to user space */
 
     }
 
@@ -138,7 +138,7 @@ static struct file_operations fops = {
 static irqreturn_t isr(int irq, void *dev_id){
     pr_info("%s: GPIO Interrupt occoured\n", my_device);
     
-    event_count++;                            /* New event — all fds will see this */
+    event_count++;                            /* New event - all fds will see this */
 
     /* Wake up waiting processes */
     wake_up_interruptible(&my_wait_queue);
