@@ -42,19 +42,19 @@ static atomic_t        press_count  = ATOMIC_INIT(0);
 static unsigned long   irq_jiffies;
 
 /* ------------------------------------------------------------------ */
-/*  MODE 1 — TASKLET bottom-half                                        */
+/*  MODE 1 - TASKLET bottom-half                                        */
 /*                                                                      */
-/*  A tasklet runs in SOFTIRQ context — one step above hardirq but     */
+/*  A tasklet runs in SOFTIRQ context - one step above hardirq but     */
 /*  still ATOMIC. Rules:                                                */
-/*    ❌ msleep() is FORBIDDEN — will trigger "scheduling while atomic" */
-/*    ❌ mutex_lock() is FORBIDDEN — mutex can sleep                    */
+/*    ❌ msleep() is FORBIDDEN - will trigger "scheduling while atomic" */
+/*    ❌ mutex_lock() is FORBIDDEN - mutex can sleep                    */
 /*    ✅ gpio_set_value() is OK (non-sleeping)                          */
 /*    ✅ atomic operations are OK                                       */
-/*    ✅ mdelay() is OK — but it busy-waits, burning the CPU            */
+/*    ✅ mdelay() is OK - but it busy-waits, burning the CPU            */
 /*                                                                      */
 /*  Because we cannot sleep, we cannot add a clean delay before        */
 /*  turning the LED on. The best we can do is a CPU-burning mdelay()   */
-/*  for very short waits — completely impractical for 500ms.           */
+/*  for very short waits - completely impractical for 500ms.           */
 /* ------------------------------------------------------------------ */
 
 static void tasklet_led_handler(struct tasklet_struct *t)
@@ -66,7 +66,7 @@ static void tasklet_led_handler(struct tasklet_struct *t)
 
     /*
      * ---------------------------------------------------------------
-     * KEY POINT — Try uncommenting the msleep() below and reload:
+     * KEY POINT - Try uncommenting the msleep() below and reload:
      *   sudo insmod my_driver.ko mode=1
      *   Press the button → kernel will immediately BUG():
      *   "BUG: scheduling while atomic: ..."
@@ -78,10 +78,10 @@ static void tasklet_led_handler(struct tasklet_struct *t)
 
     /*
      * No delay is possible here without busy-waiting.
-     * mdelay() busy-waits (holds the CPU) — acceptable only for
+     * mdelay() busy-waits (holds the CPU) - acceptable only for
      * microsecond-range delays, never for hundreds of milliseconds.
      */
-    pr_info("[%s] TASKLET: Cannot msleep() — turning LED ON instantly\n",
+    pr_info("[%s] TASKLET: Cannot msleep() - turning LED ON instantly\n",
             DRIVER_NAME);
 
     gpio_set_value(GPIO_LED, 1);
@@ -90,7 +90,7 @@ static void tasklet_led_handler(struct tasklet_struct *t)
     /*
      * We also cannot sleep for LED_ON_MS here.
      * A real driver would schedule a hrtimer for the OFF, which adds
-     * significant complexity — further proof workqueues are simpler.
+     * significant complexity - further proof workqueues are simpler.
      */
     mdelay(50);   /* tiny busy-wait just to make LED flash visible */
 
@@ -100,17 +100,17 @@ static void tasklet_led_handler(struct tasklet_struct *t)
 }
 
 
-/* Declare the tasklet — DECLARE_TASKLET_OLD removed in 5.x,
+/* Declare the tasklet - DECLARE_TASKLET_OLD removed in 5.x,
  * use tasklet_setup / DECLARE_TASKLET with new API               */
 static DECLARE_TASKLET(led_tasklet, tasklet_led_handler);
 
 
 /* ------------------------------------------------------------------ */
-/*  MODE 2 — WORKQUEUE bottom-half                                      */
+/*  MODE 2 - WORKQUEUE bottom-half                                      */
 /*                                                                      */
 /*  The work handler runs in PROCESS context (kworker thread).         */
 /*  Rules:                                                              */
-/*    ✅ msleep() allowed — we can cleanly delay 500ms                 */
+/*    ✅ msleep() allowed - we can cleanly delay 500ms                 */
 /*    ✅ mutex_lock() allowed                                           */
 /*    ✅ I2C / SPI transactions allowed                                 */
 /*    ✅ kmalloc(GFP_KERNEL) allowed                                    */
@@ -127,24 +127,24 @@ static void wq_led_handler(struct work_struct *work)
             "IRQ→WQ latency ~%u ms | in_interrupt()=%lu\n",
             DRIVER_NAME, press,
             jiffies_to_msecs(latency),
-            in_interrupt());          /* will print 0 — we are NOT atomic */
+            in_interrupt());          /* will print 0 - we are NOT atomic */
 
     /*
      * ---------------------------------------------------------------
-     * KEY POINT — This msleep() is perfectly safe here.
+     * KEY POINT - This msleep() is perfectly safe here.
      * Compare with the tasklet handler above where it would BUG.
      * in_interrupt() returns 0 here, confirming process context.
      * ---------------------------------------------------------------
      */
     pr_info("[%s] WORKQUEUE: msleep(%d) sleeping cleanly...\n",
             DRIVER_NAME, LED_DELAY_MS);
-    msleep(LED_DELAY_MS);   /* ✅ safe — process context */
+    msleep(LED_DELAY_MS);   /* ✅ safe - process context */
 
     gpio_set_value(GPIO_LED, 1);
     pr_info("[%s] WORKQUEUE: LED ON after %d ms delay\n",
             DRIVER_NAME, LED_DELAY_MS);
 
-    msleep(LED_ON_MS);      /* ✅ safe — keep LED on for 1 second */
+    msleep(LED_ON_MS);      /* ✅ safe - keep LED on for 1 second */
 
     gpio_set_value(GPIO_LED, 0);
     pr_info("[%s] WORKQUEUE: LED OFF clean delay was possible!\n",
@@ -153,7 +153,7 @@ static void wq_led_handler(struct work_struct *work)
 
 
 /* ------------------------------------------------------------------ */
-/*  Top half — shared ISR for both modes                               */
+/*  Top half - shared ISR for both modes                               */
 /*                                                                      */
 /*  Regardless of mode, the ISR is minimal:                            */
 /*    1. Record timestamp                                               */
@@ -167,7 +167,7 @@ static irqreturn_t button_isr(int irq, void *dev_id)
     irq_jiffies = jiffies;
     atomic_inc(&press_count);
 
-    pr_info("[%s] TOP HALF (hardirq ctx): press #%u — "
+    pr_info("[%s] TOP HALF (hardirq ctx): press #%u - "
             "scheduling %s bottom-half\n",
             DRIVER_NAME,
             atomic_read(&press_count),
@@ -202,8 +202,8 @@ static int __init my_init(void)
     pr_info("[%s] Loading\n", DRIVER_NAME);
     pr_info("[%s] Mode: %d (%s)\n",
             DRIVER_NAME, mode,
-            (mode == 1) ? "TASKLET  — softirq context, NO sleep"
-                        : "WORKQUEUE — process context, sleep OK");
+            (mode == 1) ? "TASKLET  - softirq context, NO sleep"
+                        : "WORKQUEUE - process context, sleep OK");
 
     /* ---- GPIO: Button -------------------------------------------- */
     ret = gpio_request(GPIO_BUTTON, "button_gpio");
@@ -277,7 +277,7 @@ static void __exit my_exit(void)
     /* 1. Disable further interrupts */
     free_irq(irq_number, NULL);
 
-    /* 2. Stop the bottom-half — method depends on mode */
+    /* 2. Stop the bottom-half - method depends on mode */
     if (mode == 1) {
         /* tasklet_kill() waits if the tasklet is currently running.
          * Safe equivalent of cancel_work_sync() for tasklets.        */
