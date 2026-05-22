@@ -119,7 +119,7 @@
 * Probe/remove lifecycle
 * Hotplug & Uevents (plug/unplug)
 
-### 22. Sysfs Interface
+### [22. Sysfs Interface](/22_sysfs/)
 * Device attributes
 * Creating and removing sysfs files
 * Sysfs class interfaces (/sys/class/mydriver)
