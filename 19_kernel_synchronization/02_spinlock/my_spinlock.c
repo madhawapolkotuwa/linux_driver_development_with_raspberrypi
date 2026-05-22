@@ -59,7 +59,7 @@ static	ssize_t my_read(struct file *pFile, char __user *pUser_buff, size_t count
 
     spin_unlock_irqrestore(&my_spinlock, flags);
 
-    /* copy_to_user OUTSIDE the spinlock — it can sleep */
+    /* copy_to_user OUTSIDE the spinlock - it can sleep */
     return copy_to_user(pUser_buff, local_buffer, shared_len) ? -EFAULT : shared_len;
 }
 
