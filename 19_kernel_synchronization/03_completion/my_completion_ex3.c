@@ -35,7 +35,7 @@ static int press_count = 0;
 /*
  * Timeout: how long the waiter thread sleeps before giving up.
  *
- * jiffies is the kernel's internal time counter — it increments
+ * jiffies is the kernel's internal time counter - it increments
  * HZ times per second (HZ = 250 on Raspberry Pi 4).
  *
  * msecs_to_jiffies(ms) converts milliseconds to jiffies:
@@ -51,7 +51,7 @@ static int press_count = 0;
 
 static int waiter_thread_fn(void *data)
 {
-    pr_info("%s: waiter_thread started — calling wait_for_completion()\n",
+    pr_info("%s: waiter_thread started - calling wait_for_completion()\n",
         my_device);
     
     unsigned long ret;
@@ -69,8 +69,8 @@ static int waiter_thread_fn(void *data)
          *                                    kthread_should_stop()
          *
          * Return value meaning:
-         *   > 0  : completed successfully — value is jiffies left on the timer
-         *   = 0  : timed out — complete() was never called within the window
+         *   > 0  : completed successfully - value is jiffies left on the timer
+         *   = 0  : timed out - complete() was never called within the window
          */
         ret = wait_for_completion_timeout(&my_comp, TIMEOUT_JIFFIES);
 
@@ -79,22 +79,22 @@ static int waiter_thread_fn(void *data)
 
         if(ret == 0){
             /*
-             * Timeout expired — button was not pressed within TIMEOUT_MS.
+             * Timeout expired - button was not pressed within TIMEOUT_MS.
              * ret == 0 always means timeout.
              * Log it and loop back to wait again.
              */
-            pr_info("%s: TIMEOUT — no button press within %d ms. "
+            pr_info("%s: TIMEOUT - no button press within %d ms. "
                     "Waiting again...\n", my_device, TIMEOUT_MS);
         }else{
 
             /*
-             * Button was pressed — ISR called complete().
+             * Button was pressed - ISR called complete().
              * ret > 0 means success.
              * ret itself is the number of jiffies remaining on the timer
-             * when complete() was called — useful to know how quickly
+             * when complete() was called - useful to know how quickly
              * the event arrived relative to the timeout window.
              */
-            pr_info("%s: waiter_thread WOKE UP — press #%d received! "
+            pr_info("%s: waiter_thread WOKE UP - press #%d received! "
                     "(%ld jiffies remaining out of %lu)\n",
                     my_device, press_count, ret, TIMEOUT_JIFFIES);
  
@@ -102,7 +102,7 @@ static int waiter_thread_fn(void *data)
              * reinit_completion() resets the internal counter back to 0
              * so the thread sleeps again on the next loop iteration.
              *
-             * Must be called AFTER processing — not before.
+             * Must be called AFTER processing - not before.
              * If called before, a button press arriving between
              * reinit_completion() and the next wait_for_completion_timeout()
              * would be silently lost.
@@ -139,7 +139,7 @@ static irqreturn_t isr(int irq, void *dev_id){
      * Signal the completion.
      * comp_waiter is sleeping inside wait_for_completion().
      * complete() increments the internal counter and wakes it up.
-     * complete() is safe in interrupt context — it never sleeps.
+     * complete() is safe in interrupt context - it never sleeps.
      */
     complete(&my_comp);
 
@@ -208,7 +208,7 @@ static void __exit my_exit(void){
 
     free_irq(irq_number, NULL);
 
-    pr_info("%s: driver unloaded — total presses: %d\n", my_device, press_count);
+    pr_info("%s: driver unloaded - total presses: %d\n", my_device, press_count);
 }
 
 module_init(my_init);

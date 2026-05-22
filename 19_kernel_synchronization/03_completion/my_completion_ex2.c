@@ -34,7 +34,7 @@ static int press_count = 0;
 /*
  * Timeout: how long the waiter thread sleeps before giving up.
  *
- * jiffies is the kernel's internal time counter — it increments
+ * jiffies is the kernel's internal time counter - it increments
  * HZ times per second (HZ = 250 on Raspberry Pi 4).
  *
  * msecs_to_jiffies(ms) converts milliseconds to jiffies:
@@ -50,12 +50,12 @@ static int press_count = 0;
 
 static int waiter_thread_fn(void *data)
 {
-    pr_info("%s: waiter_thread started — calling wait_for_completion()\n",
+    pr_info("%s: waiter_thread started - calling wait_for_completion()\n",
             my_device);
  
     while (!kthread_should_stop()) {
  
-        pr_info("%s: waiter_thread sleeping — waiting for button press\n",
+        pr_info("%s: waiter_thread sleeping - waiting for button press\n",
                 my_device);
  
         wait_for_completion(&my_comp);
@@ -88,7 +88,7 @@ static irqreturn_t isr(int irq, void *dev_id){
      * Signal the completion.
      * comp_waiter is sleeping inside wait_for_completion().
      * complete() increments the internal counter and wakes it up.
-     * complete() is safe in interrupt context — it never sleeps.
+     * complete() is safe in interrupt context - it never sleeps.
      */
     complete(&my_comp);
 
@@ -155,7 +155,7 @@ static void __exit my_exit(void){
 
     free_irq(irq_number, NULL);
 
-    pr_info("%s: driver unloaded — total presses: %d\n", my_device, press_count);
+    pr_info("%s: driver unloaded - total presses: %d\n", my_device, press_count);
 }
 
 module_init(my_init);

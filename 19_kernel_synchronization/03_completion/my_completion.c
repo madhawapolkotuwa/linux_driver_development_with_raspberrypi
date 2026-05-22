@@ -36,12 +36,12 @@ static int press_count = 0;
 
 static int waiter_thread_fn_1(void *data)
 {
-    pr_info("%s: waiter_thread_1 started — calling wait_for_completion()\n",
+    pr_info("%s: waiter_thread_1 started - calling wait_for_completion()\n",
             my_device);
  
     while (!kthread_should_stop()) {
  
-        pr_info("%s: waiter_thread_1 sleeping — waiting for button press\n",
+        pr_info("%s: waiter_thread_1 sleeping - waiting for button press\n",
                 my_device);
  
         /*
@@ -54,12 +54,12 @@ static int waiter_thread_fn_1(void *data)
         * forever waiting for a button press that never comes.
         */
         if (wait_for_completion_interruptible(&my_comp) != 0) {
-            pr_info("%s: waiter_thread_1 interrupted — exiting\n", my_device);
+            pr_info("%s: waiter_thread_1 interrupted - exiting\n", my_device);
             break;
         }
  
-        /* Woke up — ISR called complete() */
-        pr_info("%s: waiter_thread_1 WOKE UP — processing press #%d\n",
+        /* Woke up - ISR called complete() */
+        pr_info("%s: waiter_thread_1 WOKE UP - processing press #%d\n",
                 my_device, press_count);
  
         reinit_completion(&my_comp);
@@ -70,21 +70,21 @@ static int waiter_thread_fn_1(void *data)
 
 static int waiter_thread_fn_2(void *data)
 {
-    pr_info("%s: waiter_thread_2 started — calling wait_for_completion()\n",
+    pr_info("%s: waiter_thread_2 started - calling wait_for_completion()\n",
             my_device);
  
     while (!kthread_should_stop()) {
  
-        pr_info("%s: waiter_thread_2 sleeping — waiting for button press\n",
+        pr_info("%s: waiter_thread_2 sleeping - waiting for button press\n",
                 my_device);
  
         if (wait_for_completion_interruptible(&my_comp) != 0) {
-            pr_info("%s: waiter_thread_2 interrupted — exiting\n", my_device);
+            pr_info("%s: waiter_thread_2 interrupted - exiting\n", my_device);
             break;
         }
  
-        /* Woke up — ISR called complete() */
-        pr_info("%s: waiter_thread_2 WOKE UP — processing press #%d\n",
+        /* Woke up - ISR called complete() */
+        pr_info("%s: waiter_thread_2 WOKE UP - processing press #%d\n",
                 my_device, press_count);
  
         reinit_completion(&my_comp);
@@ -118,7 +118,7 @@ static irqreturn_t isr(int irq, void *dev_id){
      * Signal the completion.
      * comp_waiter is sleeping inside wait_for_completion().
      * complete() increments the internal counter and wakes it up.
-     * complete() is safe in interrupt context — it never sleeps.
+     * complete() is safe in interrupt context - it never sleeps.
      */
     complete(&my_comp);
 
@@ -194,7 +194,7 @@ static void __exit my_exit(void){
 
     free_irq(irq_number, NULL);
 
-    pr_info("%s: driver unloaded — total presses: %d\n", my_device, press_count);
+    pr_info("%s: driver unloaded - total presses: %d\n", my_device, press_count);
 }
 
 module_init(my_init);
