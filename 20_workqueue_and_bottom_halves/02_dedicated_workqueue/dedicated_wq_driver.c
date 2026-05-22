@@ -106,7 +106,7 @@ static ssize_t trigger_store(struct kobject *kobj,
         return -EINVAL;
 
     if (val == 1) {
-        pr_info("[%s] Sysfs trigger received — scheduling work\n",
+        pr_info("[%s] Sysfs trigger received - scheduling work\n",
                 DRIVER_NAME);
         schedule_demo_work();
     }
@@ -160,7 +160,7 @@ static int __init my_init(void)
             DRIVER_NAME);
     schedule_demo_work();
 
-    pr_info("[%s] module_init returns — work will execute asynchronously\n",
+    pr_info("[%s] module_init returns - work will execute asynchronously\n",
             DRIVER_NAME);
 
     return 0;
