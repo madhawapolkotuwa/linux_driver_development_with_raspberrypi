@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
     fcntl(fd, F_SETFL, flags | O_ASYNC);
 
     printf("Async notification enabled. Press the button at any time.\n");
-    printf("Process is running freely — not blocked.\n\n");
+    printf("Process is running freely - not blocked.\n\n");
 
     int counter = 0;
     while(1){

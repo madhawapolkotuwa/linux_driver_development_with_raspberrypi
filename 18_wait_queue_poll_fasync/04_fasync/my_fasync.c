@@ -10,7 +10,7 @@
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("MPCoding - LDD");
-MODULE_DESCRIPTION("fasync demo — async notification with GPIO interrupt");
+MODULE_DESCRIPTION("fasync demo - async notification with GPIO interrupt");
 
 #define BUTTON_GPIO 20
 #define IO_OFFSET 512
