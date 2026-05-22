@@ -9,7 +9,7 @@
 
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("MPCoding - LDD");
-MODULE_DESCRIPTION("Blocking vs Non-Blocking I/O demo — character device with GPIO interrupt");
+MODULE_DESCRIPTION("Blocking vs Non-Blocking I/O demo - character device with GPIO interrupt");
 
 /* GPIO Button */
 #define BUTTON_GPIO 20
