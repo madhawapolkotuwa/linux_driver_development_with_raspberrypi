@@ -10,3 +10,20 @@ all:
 
 clean:
 	make -C $(KDIR) M=$(PWD) clean
+
+
+load: 
+	@echo "--- Loading mybus ---"
+	sudo insmod mybus.ko
+	@echo "--- Loading mydevice ---"
+	sudo insmod mydevice.ko
+	@echo "--- Loading mydriver ---"
+	sudo insmod mydriver.ko
+
+unload: 
+	@echo "--- Unloading mydriver ---"
+	sudo rmmod mydriver.ko
+	@echo "--- Unloading mydevice ---"
+	sudo rmmod mydevice.ko
+	@echo "--- Unloading mybus ---"
+	sudo rmmod mybus.ko

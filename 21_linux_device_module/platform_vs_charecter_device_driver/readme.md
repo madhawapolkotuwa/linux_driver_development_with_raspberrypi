@@ -533,7 +533,7 @@ module_init(mybus_init);
 
 ## Layer 3 : Device Driver (A driver for chips on the bus)
 ```c
-// mybus_sensor.c — a driver for a device connected to the bus
+// mybus_sensor.c - a driver for a device connected to the bus
 
 static int mysensor_probe(struct mybus_device *mbdev)
 {

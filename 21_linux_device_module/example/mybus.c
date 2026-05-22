@@ -7,7 +7,7 @@
 static int my_match(struct device *dev,
                     const struct device_driver *drv)
 {
-    pr_info("mybus: match called\n");
+    pr_info("mybus: match called %s : %s \n",dev_name(dev), drv->name);
     return !strcmp(dev_name(dev), drv->name);
 }
 
