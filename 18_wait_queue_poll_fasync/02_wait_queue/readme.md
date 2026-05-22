@@ -4,7 +4,7 @@
 [![Youtube Video](https://img.youtube.com/vi/q2r0_LYCYvc/0.jpg)](https://www.youtube.com/watch?v=q2r0_LYCYvc)
 
 A **wait queue** is a kernel-managed list of sleeping processes.    
-When data is unavailable, a process is added to the queue and put to sleep — truly suspended, consuming zero CPU.   
+When data is unavailable, a process is added to the queue and put to sleep - truly suspended, consuming zero CPU.   
 When data arrives (from an IRQ handler, timer, or another process),     
 the driver wakes up the processes in the queue and they resume execution.
 
@@ -39,14 +39,14 @@ Function | Signal-safe | Returns
 `wait_event_timeout(q, cond, jiffies)` | No | remaining jiffies or 0
 `wait_event_interruptible_timeout(q, cond, jiffies)` | Yes | remaining jiffies, 0, or `-ERESTARTSYS`
 
-Always prefer `_interruptible` variants — processes stuck in uninterruptible sleep (`TASK_UNINTERRUPTIBLE`) cannot be killed with `Ctrl+C` or `kill -9`.
+Always prefer `_interruptible` variants - processes stuck in uninterruptible sleep (`TASK_UNINTERRUPTIBLE`) cannot be killed with `Ctrl+C` or `kill -9`.
 
 ### Waking Up: `wake_up_interruptible()`
 ```c++
 wake_up(&my_wait_queue);               /* Wake all sleepers (interruptible and uninterruptible) */
 wake_up_interruptible(&my_wait_queue); /* Wake only TASK_INTERRUPTIBLE sleepers */
 ```
-Call `wake_up_interruptible()` after producing new data — typically from an IRQ handler. Always pair it with `wait_event_interruptible()`.
+Call `wake_up_interruptible()` after producing new data - typically from an IRQ handler. Always pair it with `wait_event_interruptible()`.
 
 ## Example: Blocking and Non-Blocking I/O with `Wait Queue`. 
 In this example, a GPIO button press acts as the hardware event that produces data. When the button is pressed, the ISR sets d`ata_available = 1` and wakes up any sleeping readers via the wait queue.
@@ -55,7 +55,7 @@ This replaces the busy-wait loop (`cpu_relax()`) from the previous section with 
 
 **Key Changes from the Previous Driver**     
 
-**ISR — wakes the wait queue on button press:**
+**ISR - wakes the wait queue on button press:**
 
 ```c++
 static irqreturn_t isr(int irq, void *dev_id)
@@ -68,7 +68,7 @@ static irqreturn_t isr(int irq, void *dev_id)
     return IRQ_HANDLED;
 }
 ```
-`my_read()` — sleeps instead of busy-waiting:
+`my_read()` - sleeps instead of busy-waiting:
 ```c++
 static ssize_t my_read(struct file *file,
                        char __user *buf,
@@ -90,7 +90,7 @@ static ssize_t my_read(struct file *file,
 
         int ret = wait_event_interruptible(my_wait_queue, data_available != 0);
         if (ret)
-            return -ERESTARTSYS;  /* Interrupted by a signal — propagate to user space */
+            return -ERESTARTSYS;  /* Interrupted by a signal - propagate to user space */
     }
 
     data_available = 0;
@@ -114,13 +114,13 @@ This driver:
 
 ### Test 1: Non-Blocking Read
 
-#### *Step 1* — Load the module
+#### *Step 1* - Load the module
 ```bash
 sudo insmod wait_queue.ko
 ```
 Initially `data_available = 0`.
 
-#### *Step 2* — Run the test app (no data available)
+#### *Step 2* - Run the test app (no data available)
 ```bash
 sudo ./test /dev/my_cdev0
 ```
@@ -140,7 +140,7 @@ my_cdev: device closed
 Because the file was opened with `O_NONBLOCK` and `data_available == 0`,    
 the driver immediately returns `-EAGAIN` without sleeping.
 
-#### *Step 3* — Press the hardware button
+#### *Step 3* - Press the hardware button
 
 The falling edge on GPIO 20 triggers the ISR:
 ```
@@ -148,7 +148,7 @@ my_cdev: GPIO Interrupt occoured
 ```
 Now `data_available = 1`.
 
-#### Step 4 — Run the test app again
+#### Step 4 - Run the test app again
 ```bash
 sudo ./test /dev/my_cdev0
 ```
@@ -198,13 +198,13 @@ Hello from Kernel!
 
 Each button press produces exactly one line of output.
 
-#### *Step 3* — Observe CPU usage
+#### *Step 3* - Observe CPU usage
 
 While `cat` is blocked and waiting for the next button press, open another terminal and run:
 ```
 top
 ```
-You will see the `cat` process consuming 0% CPU — it is truly sleeping.   
+You will see the `cat` process consuming 0% CPU - it is truly sleeping.   
 
 Compare this to the previous busy-wait implementation,  
  ```c++
@@ -213,7 +213,7 @@ Compare this to the previous busy-wait implementation,
  ```
 where `cat` consumed **100% CPU** while waiting.
 
-#### *Step 4* — Exit with Ctrl+C
+#### *Step 4* - Exit with Ctrl+C
 
 Because the process is in interruptible sleep, `Ctrl+C` works correctly.   
 The signal interrupts `wait_event_interruptible()`,   
@@ -288,7 +288,7 @@ cat /dev/my_cdev0
                                  Process → TASK_INTERRUPTIBLE
                                  Removed from run queue
                                           │
-                                (CPU free — runs other tasks)
+                                (CPU free - runs other tasks)
                                           │
                                           ▼
                                     (Button press)
@@ -308,7 +308,7 @@ cat /dev/my_cdev0
   "Hello from Kernel!"
         │
         ▼
-  (cat loops — calls read() again → process sleeps again)
+  (cat loops - calls read() again → process sleeps again)
 
 ```
 ---------------------------------
@@ -339,4 +339,4 @@ API | Description
 
 **Key rule**: Always set the condition variable before calling `wake_up_interruptible()`.   
 If you wake first and set the condition after, the woken process may re-check the condition while it is still false,    
-go back to sleep, and never be woken again — a classic kernel deadlock.
+go back to sleep, and never be woken again - a classic kernel deadlock.

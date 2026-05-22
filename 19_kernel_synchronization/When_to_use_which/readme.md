@@ -56,7 +56,7 @@ Waiter behaviour | Sleeps | Spins (busy-waits) | Sleeps
 Usable in ISR   |✗ No | ✓ Yes | ✓ Yes (`complete()` only)     
 Usable in process context | ✓ Yes | ✓ Yes | ✓ Yes     
 Purpose | Mutual exclusion | Mutual exclusion | Signaling / ordering     
-Owner concept | Yes — locker must unlock | ✗ No | ✗ No     
+Owner concept | Yes - locker must unlock | ✗ No | ✗ No     
 Can be held across sleep | ✓ Yes | ✗ No | N/A  
 Overhead | Higher (context switch) | Lower (no switch) but wastes CPU | Low  
 Best for | Long critical sections | Very short critical sections (< few µs) | Thread ↔ thread / ISR ↔ thread signaling   

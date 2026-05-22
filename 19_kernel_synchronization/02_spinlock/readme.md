@@ -22,7 +22,7 @@ Rule:
 --------------
 --------------
 ```
-CPU 0 (process context)       CPU 1 (interrupt context — ISR)
+CPU 0 (process context)       CPU 1 (interrupt context - ISR)
 ───────────────────────       ───────────────────────────────
 
 spin_lock(&my_lock)           /* Button pressed → ISR fires */
@@ -56,7 +56,7 @@ A spinlock is a single integer ➞ locked or unlocked.
 * `spin_lock()` ➞ acquire the lock. Spins until available.
 * `spin_unlock()` ➞ release the lock.
 * `spin_lock_irqsave()` ➞ acquire the lock and disable local interrupts, saving the previous interrupt state.
-* `spin_unlock_irqrestore()` — release the lock and restore interrupts to the saved state.
+* `spin_unlock_irqrestore()` - release the lock and restore interrupts to the saved state.
 
 When protecting data shared with an **ISR**, **always use** `spin_lock_irqsave()`.   
 If you only use `spin_lock()` from process context, 
@@ -106,7 +106,7 @@ static ssize_t my_read(struct file *file, char __user *buf,
     /* Release spinlock AND restore interrupts to previous state */
     spin_unlock_irqrestore(&my_spinlock, flags);
 
-    /* copy_to_user OUTSIDE the spinlock — it can sleep */
+    /* copy_to_user OUTSIDE the spinlock - it can sleep */
     return copy_to_user(buf, local_copy, len) ? -EFAULT : len;
 }
 ```
@@ -120,7 +120,7 @@ Copy the data to a local buffer first, then release the lock, then copy to user 
 ```c++
 static irqreturn_t isr(int irq, void *dev_id)
 {
-    /* In interrupt context — use spin_lock(), NOT spin_lock_irqsave().
+    /* In interrupt context - use spin_lock(), NOT spin_lock_irqsave().
        IRQs are already disabled on this CPU when an ISR runs.
        Using irqsave here is redundant but not harmful. spin_lock() is fine. */
     spin_lock(&my_spinlock);
@@ -161,7 +161,7 @@ spin_unlock_irqrestore(&lock, flags)
         │                             (Button pressed → ISR fires)
         ▼                                       │
   copy_to_user()                                ▼
-  (safe — lock is released)           spin_lock(&lock)
+  (safe - lock is released)           spin_lock(&lock)
                                         ✓ Acquired (no contention)
                                                 │
                                                 ▼
@@ -174,7 +174,7 @@ spin_unlock_irqrestore(&lock, flags)
 
 What Happens Without `irqsave` (the Deadlock Scenario)
 ```c++
-CPU 0 — Process Context        CPU 0 — ISR (same CPU)
+CPU 0 - Process Context        CPU 0 - ISR (same CPU)
 ───────────────────────        ──────────────────────
 
 spin_lock(&lock)

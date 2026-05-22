@@ -34,7 +34,7 @@ poll(fds, nfds, timeout)
                                         │
                                         ▼
                                poll_wait(file, &my_wait_queue, wait)
-                               (registers the wait queue — does NOT sleep yet)
+                               (registers the wait queue - does NOT sleep yet)
                                         │
                                         ▼
                                return current ready mask
@@ -46,7 +46,7 @@ poll(fds, nfds, timeout)
   YES         NO
    │           │
    ▼           ▼
- return      Sleep — wait for wake_up_interruptible()
+ return      Sleep - wait for wake_up_interruptible()
  to app            │
                    │   (Button pressed → ISR fires or stdin)
                    │
@@ -58,7 +58,7 @@ poll(fds, nfds, timeout)
              poll() returns to user space
                    │
                    ▼
-             App calls read() — data is available
+             App calls read() - data is available
 ```
 
 `poll_wait()` does not put the process to sleep by itself.  
@@ -76,7 +76,7 @@ Flag            |       Meaning
 `EPOLLOUT`      |       Space available for writing
 `EPOLLERR`      |       Error condition
 `EPOLLHUP`      |       Hang-up (device disconnected)
-`0`             |       No events ready — process will sleep
+`0`             |       No events ready - process will sleep
 
 For a read-only device like ours, returning `EPOLLIN | EPOLLRDNORM` is the standard combination.
 
@@ -85,7 +85,7 @@ The ISR  (Button ISR)
 The ISR is identical to the wait queue example. `wake_up_interruptible()` wakes both `wait_event_interruptible()` callers and `poll/select` waiters  they all share the same wait queue:
 
 
-## `poll` vs `select` — What Is the Difference?
+## `poll` vs `select` - What Is the Difference?
 Both system calls do the same job. The driver implementation is **identical**    
 the same `.poll` callback serves both. The difference is only in the **user-space API**.
 
@@ -93,9 +93,9 @@ the same `.poll` callback serves both. The difference is only in the **user-spac
 -------------------|---------------|-------------|
 **fd sets** | Three separate `fd_set` bitmasks (read, write, except) | Single array of `struct pollfd` |
 **Max fds** | Limited by `FD_SETSIZE` (usually 1024) | No hard limit
-**fd sets modified** | Yes — must be rebuilt before every call | No — `revents` field is separate from `events`
+**fd sets modified** | Yes - must be rebuilt before every call | No - `revents` field is separate from `events`
 **Timeout type** | `struct timeval` (microseconds) | `int` milliseconds
-**Preferred for new code** | No | Yes — more flexible
+**Preferred for new code** | No | Yes - more flexible
 
 
 `poll` is generally preferred in new code.  

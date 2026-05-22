@@ -50,7 +50,7 @@ sudo raspi-config
 In this example, we use the **BMP180** pressure and temperature sensor.
 
 However, you do not need a **BMP180** sensor for the initial parts of this tutorial.
-Any I2C-compatible device—or even a microcontroller such as an **Arduino** or **ESP32** configured as an I2C slave—can be used.
+Any I2C-compatible device-or even a microcontroller such as an **Arduino** or **ESP32** configured as an I2C slave-can be used.
 
 Later videos will also demonstrate **Device Tree–based device creation**, including examples using an **ESP32**.
 

@@ -188,7 +188,7 @@ Modern Linux systems use up to 5-level page tables on 64-bit systems.
 
 ## How This Fits with Virtual Memory
 
-* **Kernel code also runs in a virtual address space**, just like user programs — but with special rules.
+* **Kernel code also runs in a virtual address space**, just like user programs - but with special rules.
 
 Important Differences (User vs Kernel)
 | User Space                 | Kernel Space                      |
@@ -197,7 +197,7 @@ Important Differences (User vs Kernel)
 | Can page out freely        | Most allocations must stay in RAM |
 | Crashes affect one process | Bugs crash the entire system      |
 
-**Even inside the kernel, we don’t touch RAM directly — we still work through virtual memory.**
+**Even inside the kernel, we don’t touch RAM directly - we still work through virtual memory.**
 
 ## Kernel Memory Zones (Why GFP Flags Exist)[]
 
@@ -231,7 +231,7 @@ void *buf = kmalloc(1024, GFP_KERNEL);
 
 ![](img/kmaloc.png)
 
-**kmalloc is like asking for one solid block of RAM — no breaks allowed.**
+**kmalloc is like asking for one solid block of RAM - no breaks allowed.**
 
 ## kzalloc() – kmalloc + Zeroing
 ```c
@@ -341,7 +341,7 @@ Instead, the **SLUB** allocator is built around the concepts of `caches, slabs, 
 ![](img/SLUB.png)
 
 
-### 1. Caches — The Top-Level Concept
+### 1. Caches - The Top-Level Concept
 
 A **cache** is the highest-level abstraction in the SLUB allocator.
 
@@ -356,7 +356,7 @@ If the kernel frequently allocates objects of a given size, it creates a dedicat
 Internally, each cache is represented by a `kmem_cache` structure.
 
 
-### 2. Slabs — Memory Backing a Cache
+### 2. Slabs - Memory Backing a Cache
 
 A **slab** is a contiguous region of memory that belongs to a cache.
 * A slab consists of one or more physical pages
@@ -449,7 +449,7 @@ For most kernel and driver work, the important mental model is simple:
     * Free
     * Holding a kernel object
 
-Understanding how objects are laid out inside slabs — and how slabs are reused — is far more important than memorizing internal data structures.
+Understanding how objects are laid out inside slabs - and how slabs are reused - is far more important than memorizing internal data structures.
 
 ### 9. Relationship to Virtual Memory
 

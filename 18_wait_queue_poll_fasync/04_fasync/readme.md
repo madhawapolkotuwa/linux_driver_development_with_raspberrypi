@@ -220,7 +220,7 @@ static volatile sig_atomic_t data_ready = 0;
 
 static void sigio_handler(int sig)
 {
-    data_ready = 1;   /* Just set a flag — main loop does the read */
+    data_ready = 1;   /* Just set a flag - main loop does the read */
 }
 
 /* In main loop: */

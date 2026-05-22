@@ -11,7 +11,7 @@ Before understanding `wait queues`, we must clearly understand what **blocking**
 ## What is Blocking I/O?
 
 **Blocking I/O** means that if data is not available when a process calls `read()`, the process will sleep until data becomes available.     
-This is the default behavior in Linux — the kernel suspends the process, freeing up CPU resources until the driver wakes it up.
+This is the default behavior in Linux - the kernel suspends the process, freeing up CPU resources until the driver wakes it up.
 
 
 Example:
@@ -33,7 +33,7 @@ regardless of whether data is available or not.
 - If data is available → return the data.
 - If data is not available → return `-EAGAIN` (errno: "Resource temporarily unavailable").
 
-The application is responsible for deciding what to do next — typically by polling or using `select()`/`poll()`/`epoll()`.
+The application is responsible for deciding what to do next - typically by polling or using `select()`/`poll()`/`epoll()`.
 
 ---
 
@@ -55,7 +55,7 @@ fcntl(fd, F_SETFL, flags | O_NONBLOCK);
 int fd = open("/dev/mydev", O_RDONLY | O_NONBLOCK);
 ```
 
-Once set, `read()` will never sleep — it returns immediately.
+Once set, `read()` will never sleep - it returns immediately.
 
 ---
 
@@ -82,7 +82,7 @@ static ssize_t my_read(struct file *file,
         /* Blocking mode: busy-wait until data becomes available */
         printk(KERN_INFO "Blocking read - process sleeping...\n");
 
-        /* NOTE: This is a placeholder — wait queues will replace this */
+        /* NOTE: This is a placeholder - wait queues will replace this */
         while (!data_available)
             cpu_relax();
     }
@@ -134,25 +134,25 @@ while (!data_available)
 ```
 This approach:
 
-* Wastes CPU cycles — the process consumes an entire core doing nothing useful.
+* Wastes CPU cycles - the process consumes an entire core doing nothing useful.
 * Cannot be interrupted by signals (e.g., `Ctrl+C` or `kill -9` will not work while spinning).
 * Prevents the kernel from removing the module (`rmmod` will fail with "Resource temporarily unavailable").
 
 Correct solution → Wait Queues
 
-Wait queues allow the process to `truly sleep` (state `S` — interruptible) while consuming zero CPU, and wake up only when the ISR signals that data is ready. This will be covered in the next section.
+Wait queues allow the process to `truly sleep` (state `S` - interruptible) while consuming zero CPU, and wake up only when the ISR signals that data is ready. This will be covered in the next section.
 
 
 ## Test Result
 
 ### Test 1: Non-Blocking Read
-#### *Step 1* — Load the module
+#### *Step 1* - Load the module
 ```bash
 sudo insmod blocking_nonblocking.ko
 ```
 Initially `data_available = 0`.
 
-#### *Step 2* — Run the test app (no data available)
+#### *Step 2* - Run the test app (no data available)
 ```bash
 sudo ./test /dev/my_cdev0
 ```
@@ -172,7 +172,7 @@ my_cdev: device closed
 Because the file was opened with `O_NONBLOCK` and `data_available == 0`, the driver immediately returns `-EAGAIN` without sleeping.
 
 
-#### *Step 3* — Press the hardware button
+#### *Step 3* - Press the hardware button
 
 The falling edge on GPIO 20 triggers the ISR:
 ```
@@ -180,7 +180,7 @@ my_cdev: GPIO Interrupt occoured
 ```
 Now `data_available = 1`.
 
-#### *Step 4* — Run the test app again
+#### *Step 4* - Run the test app again
 ```bash
 sudo ./test /dev/my_cdev0
 ```
@@ -219,7 +219,7 @@ What happens:
  while (!data_available) 
             cpu_relax(); /* will take 100% cpu */
  ```
-#### *Step 2* — Press the hardware button
+#### *Step 2* - Press the hardware button
 Press the button → ISR sets `data_available = 1`.
 
 The busy-wait loop exits, 
@@ -234,8 +234,8 @@ cat immediately calls `read()` again → back to spinning.
 
 -----
  
-#### The problem — you cannot interrupt the process:
-Try pressing `Ctrl+C`. Nothing happens. Run `top` and you will see the `cat` process consuming **100% CPU** with state `R` (running — actively spinning on the CPU).
+#### The problem - you cannot interrupt the process:
+Try pressing `Ctrl+C`. Nothing happens. Run `top` and you will see the `cat` process consuming **100% CPU** with state `R` (running - actively spinning on the CPU).
 
 
 ```bash
@@ -309,7 +309,7 @@ So process terminated, file closed.
 
 Even `SIGKILL` cannot interrupt a process that is spinning inside the kernel. The signal is delivered, but the process cannot act on it until it returns from kernel space. Since the busy-wait loop never yields, the process stays in `R` state indefinitely.
 
-The only way to unblock it is to press the button — this allows the driver to return from `my_read`, at which point the kernel delivers the pending signal and terminates the process.
+The only way to unblock it is to press the button - this allows the driver to return from `my_read`, at which point the kernel delivers the pending signal and terminates the process.
 
 
 # Summary
@@ -322,6 +322,6 @@ The only way to unblock it is to press the button — this allows the driver to 
 **Default mode** | ✅ Yes | Set via `O_NONBLOCK`
 **Typical use case** | Simple sequential reads | Event-driven / async applications
 
-**Key takeaway:** Blocking I/O with proper wait queues is the efficient, correct approach. Busy-waiting is never acceptable in real kernel drivers — it wastes CPU, blocks signals, and prevents clean module unloading.
+**Key takeaway:** Blocking I/O with proper wait queues is the efficient, correct approach. Busy-waiting is never acceptable in real kernel drivers - it wastes CPU, blocks signals, and prevents clean module unloading.
 
-**Next: Wait Queues** — replacing `cpu_relax()` with `wait_event_interruptible()` for correct, signal-safe blocking behavior.
+**Next: Wait Queues** - replacing `cpu_relax()` with `wait_event_interruptible()` for correct, signal-safe blocking behavior.

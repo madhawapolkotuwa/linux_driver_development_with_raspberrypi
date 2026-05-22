@@ -94,7 +94,7 @@ ex:- `.write`
 static ssize_t my_write(struct file *file, const char __user *buf,
                         size_t count, loff_t *ppos)
 {
-    /* Acquire the mutex — sleeps if another process holds it.
+    /* Acquire the mutex - sleeps if another process holds it.
        Returns -EINTR if interrupted by a signal while sleeping. */
     if (mutex_lock_interruptible(&my_mutex))
         return -EINTR;
@@ -164,7 +164,7 @@ If the critical section has multiple return statements, each one must call `mute
 * ⚠️ A missed unlock means the mutex is held forever, every subsequent caller sleeps indefinitely. 
 
 ```c++
-/* Wrong — leaks the mutex on error */
+/* Wrong - leaks the mutex on error */
 if (mutex_lock_interruptible(&my_mutex))
     return -EINTR;
 
@@ -175,7 +175,7 @@ mutex_unlock(&my_mutex);
 ```
 
 ```c++
-/* Correct — unlock on every exit path */
+/* Correct - unlock on every exit path */
 if (mutex_lock_interruptible(&my_mutex))
     return -EINTR;
 
@@ -194,13 +194,13 @@ it deadlocks immediately ➞ it sleeps waiting for itself.
 ```c++
 mutex_lock(&my_mutex);
     /* ... */
-    mutex_lock(&my_mutex);   /* ← DEADLOCK — task sleeps waiting for itself */
+    mutex_lock(&my_mutex);   /* ← DEADLOCK - task sleeps waiting for itself */
 ```
 
 * `mutex_trylock()` for non-blocking paths
 ```c++
 if (!mutex_trylock(&my_mutex))
-    return -EBUSY;   /* Someone else holds it — return immediately instead of sleeping */
+    return -EBUSY;   /* Someone else holds it - return immediately instead of sleeping */
 
 /********************/
 /* critical section */

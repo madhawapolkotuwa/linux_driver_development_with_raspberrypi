@@ -91,7 +91,7 @@ static int reader_thread(void *data)
         return -EINTR;
     }
 
-    pr_info("reader: got the data — processing...\n");
+    pr_info("reader: got the data - processing...\n");
     /* ... consume the result ... */
 
     return 0;
@@ -99,14 +99,14 @@ static int reader_thread(void *data)
 ```
 
 3. Signal the Completion (ISR or Writer Thread)  
-From an ISR (interrupt context — complete() is safe here):
+From an ISR (interrupt context - complete() is safe here):
 ```c++
 static irqreturn_t isr(int irq, void *dev_id)
 {
     pr_info("ISR: operation finished\n");
 
     /* Wake up whoever is waiting on my_comp.
-       complete() is safe in interrupt context — it does not sleep. */
+       complete() is safe in interrupt context - it does not sleep. */
     complete(&my_comp);
 
     return IRQ_HANDLED;
@@ -185,7 +185,7 @@ Thread B / ISR                              Thread A
 
 complete(&my_comp)
   counter = 1
-  (no waiters yet — nothing to wake)
+  (no waiters yet - nothing to wake)
 
                                         wait_for_completion()
                                         counter == 1 → not zero
