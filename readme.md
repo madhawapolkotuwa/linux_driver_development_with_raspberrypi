@@ -124,7 +124,7 @@
 * Creating and removing sysfs files
 * Sysfs class interfaces (/sys/class/mydriver)
 
-### 23. Debugfs for Driver Debugging
+### [23. Debugfs for Driver Debugging](/23_debugfs/)
 * Creating debugfs entries
 * Live introspection of driver variables
 * Differences from sysfs
