@@ -121,6 +121,12 @@ static int external_gpio_irq_setup(unsigned int gpio){
 
     /* Set gpi ISR */
     irq_number = gpio_to_irq(gpio);
+    if(irq_number < 0){
+        pr_err("%s: Failed to get IRQ number for the button GPIO %d\n", my_device, irq_number);
+        gpio_free(gpio);
+        return irq_number;
+    }
+
     status = request_irq(irq_number, isr, IRQF_TRIGGER_FALLING, "irq_handler", NULL);
     if(status){
         pr_info("%s: Failed to request IRQ\n", my_device);

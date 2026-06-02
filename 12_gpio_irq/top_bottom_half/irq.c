@@ -75,6 +75,14 @@ static int __init my_init(void) {
     }
 
     irq_number = gpio_to_irq(button_gpio);
+
+    if(irq_number < 0){
+        pr_err("%s: Failed to get IRQ number for the button GPIO %d\n", device_name, irq_number);
+        gpio_free(led_gpio);
+        gpio_free(button_gpio);
+        return irq_number;
+    }
+
     status = request_irq(irq_number, button_isr, IRQF_TRIGGER_FALLING, "btn_irq_handler", NULL);
     if(status){
         pr_err("%s: IRQ request failed\n", device_name);
