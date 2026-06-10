@@ -131,7 +131,7 @@
 
 ## SECTION 7 - Device Tree & Raspberry Pi Overlays
 
-### 24. Device Tree Introduction
+### [24. Device Tree Introduction](/24_device_tree_intro/)
 * Why Device Tree exists
 * Structure of .dts and .dtsi
 * Status, compatible, reg, gpios
