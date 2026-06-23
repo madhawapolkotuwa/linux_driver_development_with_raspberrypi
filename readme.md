@@ -136,7 +136,7 @@
 * Structure of .dts and .dtsi
 * Status, compatible, reg, gpios
 
-### 25. Writing Raspberry Pi Device Tree Overlays
+### [25. Writing Raspberry Pi Device Tree Overlays](/25_device_tree_overlay/)
 * Overlay structure
 * Adding nodes dynamically
 * Applying overlays live
