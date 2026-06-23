@@ -1,5 +1,8 @@
 # Device Tree (DT)
 
+## Video :-
+[![Youtube Video](https://img.youtube.com/vi/_kgXgLwQymo/0.jpg)](https://www.youtube.com/watch?v=_kgXgLwQymo)
+
 The **Device Tree** is a data structure used by the Linux kernel to describe hardware that cannot be automatically discovered - such as peripherals on embedded platforms like Raspberry Pi, NXP, Radxa, etc.     
 Instead of hard-coding board-specific hardware details into the kernel source, the Device Tree externalizes this information into a human-readable text format (`.dts`) that is compiled into a binary blob (`.dtb`) and passed to the kernel at boot time.
 
