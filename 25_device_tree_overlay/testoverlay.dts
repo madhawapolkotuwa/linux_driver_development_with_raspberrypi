@@ -1,0 +1,35 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2835"; /* Target platform */
+    fragment@0{ /* Each fragment patches one target */
+        target-path = "/"; /* Target node in the base tree(here root node) */
+        __overlay__ { /* Content to merge in */
+            my_device { /* New node added to the tree */
+                compatible = "testdevice,mydev";
+                status = "okay";
+
+                /* String property */
+                label = "TestDevice";
+
+                /* 32-bit unsigned integer */
+                my_value = <12>;
+
+                /* 8-bit unsigned integer */
+                my_small_val = /bits/ 8 <0x42>;
+
+                /* Boolean property — presence means true */
+                my_flag;
+
+                /* Array of 32-bit integers */
+                my_array = <10 20 30 40>;
+
+                /* List of strings */
+                my_stringlist = "alpha", "beta", "gamma";
+
+            };
+        };
+
+    };
+};
