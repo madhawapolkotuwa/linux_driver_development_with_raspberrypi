@@ -1,0 +1,19 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2711";
+
+    fragment@0 {
+        target-path = "/";
+        __overlay__ {
+            mydevice: mydevice@0 {
+                compatible = "testdevice,mydev";
+                status = "okay";
+
+                led-gpios       = <&gpio 20 0>; // GPIO_ACTIVE_HIGH
+                button-gpios    = <&gpio 21 1>; // GPIO_ACTIVE_LOW
+            };
+        };
+    };
+};
