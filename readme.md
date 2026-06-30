@@ -141,7 +141,7 @@
 * Adding nodes dynamically
 * Applying overlays live
 
-### 26. Device Tree - GPIO Example
+### [26. Device Tree - GPIO Example](/26_dt_gpio/)
 * Creating a GPIO LED/button node
 * Binding to your driver
 * Reading GPIO from DT

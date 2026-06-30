@@ -76,8 +76,8 @@ Below is the overlay used in this tutorial. It is intentionally designed to demo
 
 #### 1.2 DT Property Types Summary
 
-Property | DT | Syntax | Kernel API | C Type |
----------|----|--------|------------|--------|
+Property | DT | Syntax | Kernel API C Type |
+---------|----|--------|--------------------|
 **label**  | `"string"` | `device_property_read_string()` | `const char *`
 **my_value** | `<12>` | `device_property_read_u32()` | `u32`
 **my_small_val** | `/bits/ 8 <0x42>` | `device_property_read_u8()` | `u8`
