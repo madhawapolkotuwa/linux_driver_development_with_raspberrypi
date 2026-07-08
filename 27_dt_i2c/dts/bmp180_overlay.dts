@@ -1,0 +1,28 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2711";
+
+    fragment@0 {
+        target = <&i2c1>;
+        __overlay__ {
+
+            #address-cells = <1>;
+            #size-cells    = <0>;
+
+            bmp180: bmp180@77 {
+                compatible = "bmp180-sensor,myi2c";
+                status = "okay";
+
+                reg = <0x77>;
+
+                calib_reg   = /bits/ 8 <0xAA>;
+                meas_reg    = /bits/ 8 <0xF4>;
+                result_msb  = /bits/ 8 <0xF6>;
+                ctrl_temp   = /bits/ 8 <0x2E>;
+                ctrl_pres   = /bits/ 8 <0x34>;
+            };
+        };
+    };
+};
