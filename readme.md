@@ -146,7 +146,7 @@
 * Binding to your driver
 * Reading GPIO from DT
 
-### 27. Device Tree - I2C Device
+### [27. Device Tree - I2C Device](/27_dt_i2c/)
 * Adding BMP180 in DT
 * Custom compatible string
 * Passing configuration via DT
