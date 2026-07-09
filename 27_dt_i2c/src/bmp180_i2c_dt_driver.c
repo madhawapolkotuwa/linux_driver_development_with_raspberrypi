@@ -154,9 +154,7 @@ static int bmp_read_raw_pres(struct i2c_client *client, uint8_t oss, int32_t *UP
  *
  * Algorithm follows data sheet and your userspace code logic.
  */
-static int bmp_compensate(struct bmp_calib *c, uint8_t oss,
-                          int32_t UT, int32_t UP,
-                          int32_t *temp_out, int32_t *pres_out)
+static int bmp_compensate(struct bmp_calib *c, uint8_t oss, int32_t UT, int32_t UP, int32_t *temp_out, int32_t *pres_out)
 {
     int32_t X1, X2, B3, B5, B6, X3, p;
     uint32_t B4, B7;
@@ -354,28 +352,6 @@ static void bmp180_remove(struct i2c_client *client)
     dev_info(&client->dev, "removed device\n");
 }
 
-/* private data */
-struct meta_data 
-{ 
-	char name[32];
-	uint8_t majorVersion; 
-	uint8_t minorVersion; 
-}; 
-
-/* Two sample device profiles that the driver can attach to */
-static struct meta_data a = {
-	.name = "BMP180-tmp-pre",
-	.majorVersion = 1,
-	.minorVersion = 0
-};
-
-static struct i2c_device_id bmp180_ids[] = {
-    { "bmp180", (long unsigned int) &a },
-    { /* essential */ }
-};
-
-MODULE_DEVICE_TABLE(bmp_i2c, bmp180_ids);
-
 static struct of_device_id my_driver_ids[] = {
     { .compatible = "bmp180-sensor,myi2c" },
     { },
@@ -389,7 +365,6 @@ static struct i2c_driver bmp180_driver = {
     },
     .probe = bmp180_probe,
     .remove = bmp180_remove,
-    .id_table = bmp180_ids,
     .driver = {
         .name = "my_bmp180",
         .of_match_table = my_driver_ids,
