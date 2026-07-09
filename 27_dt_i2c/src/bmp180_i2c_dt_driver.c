@@ -360,9 +360,6 @@ MODULE_DEVICE_TABLE(of, my_driver_ids);
 
 /* I2C driver struct */
 static struct i2c_driver bmp180_driver = {
-    .driver = {
-        .name = "bmp180-i2c-driver",
-    },
     .probe = bmp180_probe,
     .remove = bmp180_remove,
     .driver = {
