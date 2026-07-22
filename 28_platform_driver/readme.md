@@ -1,5 +1,10 @@
 # Platform Driver
 
+## Video :-
+
+[![Youtube Video](https://img.youtube.com/vi/jEQZWOrx8v0/0.jpg)](https://www.youtube.com/watch?v=jEQZWOrx8v0)
+
+
 >> New here? This tutorial assumes you're already comfortable with kernel modules, character devices, and the Linux Device Model (Tutorial 21). If any of that sounds unfamiliar, check the earlier videos first.
 
 We've already used platform drivers a few times in this series 

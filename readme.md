@@ -151,7 +151,7 @@
 * Custom compatible string
 * Passing configuration via DT
 
-### 28. Platform Driver 
+### [28. Platform Driver](/28_platform_driver/) 
 * Introduction to platform bus
 * Platform_device vs platform_driver
 * Useful for non-I2C/SPI devices
