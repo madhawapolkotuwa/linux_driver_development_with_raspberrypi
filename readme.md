@@ -156,7 +156,7 @@
 * Platform_device vs platform_driver
 * Useful for non-I2C/SPI devices
 
-### 29. Pin Control & Pinmux
+### [29. Pin Control & Pinmux](/29_pinmux/)
 * Pin configuration in DT
 * Alternate functions on Raspberry Pi pins
 
