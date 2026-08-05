@@ -1,0 +1,50 @@
+/dts-v1/;
+/plugin/;
+
+/{
+	compatible = "brcm,bcm2835";
+	
+	/* -----------------------------------------------------------
+	 * Fragment 0: pin configuration nodes live under the GPIO
+	 * controller itself, because on BCM283x/BCM2711 the GPIO
+	 * controller is the pin controller.
+	 * ----------------------------------------------------------- */
+	fragment@0 {
+		target = <&gpio>;
+		__overlay__ {
+
+			/* GPIO17 as a simple input, pull-down */
+			pinctrl_demo_default: pinctrl_demo_default {
+				brcm,pins 		= <17>;
+				brcm,function	= <0>; /* 0 = GPIO_IN */
+				brcm,pull 		= <1>; /* 1 = pull-down */
+			};
+
+			/* GPIO14 (TXD) / GPIO15 (RXD) as ALT0 = UART */
+			pinctrl_demo_alt0: pinctrl_demo_alt0 {
+				brcm,pins 		= <14 15>;
+				brcm,function	= <4>; /* 4 = ALT0 */
+				brcm,pull 		= <0 2>; /* TXD none, RXD pull-up */
+			};
+		};
+	};
+
+	/* -----------------------------------------------------------
+	 * Fragment 1: a dummy platform device that "owns" the pins
+	 * above and asks the pinctrl core to apply them.
+	 * ----------------------------------------------------------- */
+	fragment@1 {
+		target-path = "/"; 
+		__overlay__{
+			pinctrl_demo_device: pinctrl_demo@0{
+				compatible = "mpcoding,pinctrl-demo";
+
+				pinctrl-names = "default", "alt0";
+				pinctrl-0 = <&pinctrl_demo_default>;
+				pinctrl-1 = <&pinctrl_demo_alt0>;
+
+				status = "okay";
+			};
+		};
+	};
+};
