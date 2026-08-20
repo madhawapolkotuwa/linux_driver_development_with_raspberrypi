@@ -78,7 +78,7 @@ static int pinctrl_demo_probe(struct platform_device *pdev)
 	}
 
 	data->state_alt0 = pinctrl_lookup_state(data->pinctrl, "alt0");
-	if(IS_ERR(data->state_default)){
+	if(IS_ERR(data->state_alt0)){
 		dev_err(&pdev->dev, "failed to look up \"alt0\" state \n");
 		return PTR_ERR(data->state_alt0);
 	}
