@@ -160,7 +160,7 @@
 * Pin configuration in DT
 * Alternate functions on Raspberry Pi pins
 
-### 30. OF (Open Firmware) Parsing
+### [30. OF (Open Firmware) Parsing](/30_of_parsing/)
 * Using DT helper APIs
 * Parsing strings, ints, gpios from DT
 
