@@ -1,0 +1,31 @@
+/dts-v1/;
+/plugin/;
+
+/{
+	compatible = "brcm,bcm2835";
+
+	fragment@0 {
+		target-path = "/";
+		__overlay__ {
+			of_parse_demo: of-parse-demo {
+				compatible = "mpcoding,of-parse-demo";
+				status = "okay";
+
+				/* string property */
+				mpcoding,device-name = "sensor-alpha";
+
+				/* single u32 property */
+				mpcoding,sample-rate-hz = <100>;
+
+				/* u32 array property */
+				mpcoding,thresholds = <10 20 30>;
+
+				/* presence-only boolean property */
+				mpcoding,enable-feature;
+
+				/* GPIO property - BCM GPIO27, active low = 1*/
+				reset-gpios = <&gpio 27 1>;
+			};
+		};
+	};
+};
