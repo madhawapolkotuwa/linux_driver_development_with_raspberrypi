@@ -166,7 +166,7 @@
 
 ## SECTION 8 - Advanced Topics
 
-### 31. Misc Device Driver
+### [31. Misc Device Driver](/31_misc_devices/)
 * Easiest way to expose /dev/mydevice
 * When to prefer over char device
 
