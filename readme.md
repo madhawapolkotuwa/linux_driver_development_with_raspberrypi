@@ -170,7 +170,7 @@
 * Easiest way to expose /dev/mydevice
 * When to prefer over char device
 
-### 32. Regmap API
+### [32. Regmap API](/32_ragmap_api/)
 * Excellent for I2C/SPI register-mapped chips
 * Reduces boilerplate
 * Cache & sync
