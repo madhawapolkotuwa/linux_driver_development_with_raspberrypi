@@ -1,0 +1,40 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * regmap-demo-overlay.dts - Device Tree overlay for the regmap_demo driver
+ *
+ * Attaches a fictional "regmap-demo" I2C device at address 0x50 under
+ * the Raspberry Pi's i2c1 controller.
+ *
+ * Build:
+ *   dtc -@ -I dts -O dtb -o regmap-demo.dtbo regmap-demo-overlay.dts
+ *
+ * Install:
+ *   sudo cp regmap-demo.dtbo /boot/overlays/
+ *   sudo dtoverlay regmap-demo
+ */
+
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2835";
+
+    fragment@0 {
+        target = <&i2c1>;
+        __overlay__ {
+            #address-cells = <1>;
+            #size-cells = <0>;
+            // status = "okay";
+
+            regmap_demo: regmap-demo@68 {
+                compatible = "mpcoding,regmap-demo";
+                reg = <0x68>;
+                status = "okay";
+            };
+        };
+    };
+
+    __overrides__ {
+        addr = <&regmap_demo>, "reg:0";
+    };
+};

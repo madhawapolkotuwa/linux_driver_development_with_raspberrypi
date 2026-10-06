@@ -1,0 +1,42 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2835";
+
+    /* Free up CS0 by disabling the generic spidev node there. */
+    fragment@0 {
+        target = <&spi0>;
+        __overlay__ {
+            spidev@0 {
+				status = "disabled";
+			};
+        };
+    };
+
+    fragment@1 {
+        target = <&spi0>;
+        __overlay__ {
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            regmap_demo: regmap-demo@0 {
+                compatible = "mpcoding,regmap-demo";
+                reg = <0>;                 /* chip-select 0 on spi0 */
+                spi-max-frequency = <1000000>; /* 1 MHz register I/O limit */
+                status = "okay";
+
+                /* add device-specific properties here, e.g.: */
+				/* interrupt-parent = <&gpio>; */
+				/* interrupts = <17 2>; */      /* GPIO17, falling edge, if needed */
+				/* reset-gpios = <&gpio 27 1>; */
+                
+            };
+        };
+    };
+
+    __overrides__ {
+        cs = <&regmap_demo>, "reg:0";
+        speed = <&regmap_demo>, "spi-max-frequency:0";
+    };
+};
